@@ -61,8 +61,11 @@
                         <td class="border-b border-gray-200 px-4 py-2">{{ $user->email }}</td>
                         <td class="border-b border-gray-200 px-4 py-2">{{ $user->user_type }}</td>
                         <td class="border-b border-gray-200 px-4 py-2">
+                            <button class="bg-green-400 text-white font-bold py-1 px-2 rounded" wire:click="message({{$user->id}})">Chat</button>
+                            @if (auth()->user()->user_type === 'admin')
                             <button class="bg-yellow-500 text-white font-bold py-1 px-2 rounded" wire:click="editUser({{ $user->id }})">Edit</button>
                             <button class="bg-red-500 text-white font-bold py-1 px-2 rounded" wire:click="deleteUser({{ $user->id }})" wire:confirm="Are you sure you want to delete this user?">Delete</button>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

@@ -34,19 +34,23 @@ new class extends Component
                     {{ __('Dashboard') }}
                 </x-nav-link>
             </div>
-
+            {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <x-nav-link :href="route('users.list')" :active="request()->routeIs('users.list')" wire:navigate>
+                    {{ __('Add User') }}
+                </x-nav-link>
+            </div> --}}
             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                <x-nav-link :href="route('chat')" :active="request()->routeIs('chat')" wire:navigate>
+                <x-nav-link :href="route('chat.index')" :active="request()->routeIs('chat.index')" wire:navigate>
                     {{ __('Chat') }}
                 </x-nav-link>
             </div>
-            @if (auth()->user()->user_type === 'admin')
+            {{-- @if (auth()->user()->user_type === 'admin') --}}
             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                 <x-nav-link :href="route('users')" :active="request()->routeIs('users')" wire:navigate>
                     {{ __('Users') }}
                 </x-nav-link>
             </div>
-            @endif
+            {{-- @endif --}}
             </div>
 
 

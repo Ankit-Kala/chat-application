@@ -13,6 +13,7 @@
 
         <!-- Tailwind CSS CDN -->
         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+        <script src="https://cdn.tailwindcss.com"></script>
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -36,7 +37,7 @@
                 {{ $slot }}
             </main>
         </div>
-        @livewireScripts
+         @livewireScripts
     </body>
 </html>
 
