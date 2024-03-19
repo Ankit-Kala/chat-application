@@ -28,10 +28,12 @@
                         </select>
                         @error('user_type') <span class="text-red-500">{{ $message }}</span> @enderror
                     </div>
+                    @if (!$isEdited)
                     <div class="mb-4">
                         <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="password" wire:model="password" placeholder="Password">
                         @error('password') <span class="text-red-500">{{ $message }}</span> @enderror
-                    </div>
+                    </div>                                           
+                    @endif
                     <div class="flex items-center justify-between">
                         <button class="bg-gray-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Save User</button>
                     </div>

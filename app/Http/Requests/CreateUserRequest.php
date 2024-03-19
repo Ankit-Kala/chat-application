@@ -6,6 +6,13 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class CreateUserRequest extends FormRequest
 {
+
+    protected $userIdBeingEdited;
+
+    public function __construct($userIdBeingEdited)
+    {
+        $this->userIdBeingEdited = $userIdBeingEdited;
+    }
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -28,4 +35,5 @@ class CreateUserRequest extends FormRequest
             'password' => $this->userIdBeingEdited ? 'nullable|min:6' : 'required|min:6',
         ];
     }
+    
 }

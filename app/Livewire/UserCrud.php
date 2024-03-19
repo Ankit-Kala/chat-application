@@ -14,6 +14,7 @@ class UserCrud extends Component
     public $users;
     public $userIdBeingEdited = null;
     public $name, $email, $user_type, $password;
+    public $isEdited = false;
 
     public function mount()
     {
@@ -24,7 +25,7 @@ class UserCrud extends Component
 
     protected function rules(): array
     {
-        return (new CreateUserRequest())->rules();
+        return (new CreateUserRequest($this->userIdBeingEdited))->rules();
     }
 
     public function createOrUpdateUser()
@@ -59,6 +60,8 @@ class UserCrud extends Component
         $this->email = $user->email;
         $this->user_type = $user->user_type;
         $this->showModal = true;
+        $this->isEdited = true;
+
     }
 
     public function deleteUser($userId)
