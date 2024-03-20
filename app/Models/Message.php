@@ -31,7 +31,6 @@ class Message extends Model
 
     public function isRead():bool
     {
-
          return $this->read_at != null;
     }
 }

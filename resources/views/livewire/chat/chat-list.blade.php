@@ -29,27 +29,7 @@
                  <h5 class="font-extrabold text-2xl">Chats</h5>
             </div>
 
-             {{-- <button>
-
-                <svg class="w-7 h-7"  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
-                  </svg>
-
-             </button> --}}
-
         </div>
-
-
-        {{-- <div class="flex gap-3 items-center overflow-x-scroll p-2 bg-white">
-
-            <button @click="type='all'" :class="{'bg-blue-100 border-0 text-black':type=='all'}" class="inline-flex justify-center items-center rounded-full gap-x-1 text-xs font-medium px-3 lg:px-5 py-1  lg:py-2.5 border ">
-                    All
-            </button>
-            <button @click="type='deleted'" :class="{'bg-blue-100 border-0 text-black':type=='deleted'}" class="inline-flex justify-center items-center rounded-full gap-x-1 text-xs font-medium px-3 lg:px-5 py-1  lg:py-2.5 border ">
-                Deleted
-            </button>
-
-        </div> --}}
 
     </header>
 
@@ -87,14 +67,47 @@
                   {{-- Message body --}}
 
 
-                  <div class="flex gap-x-2 items-center">
+                <div class="flex gap-x-2 items-center">
+
+                    @if ($conversation->messages?->last()?->sender_id==auth()->id())
+
+                    @if ($conversation->isLastMessageReadByUser())
+                              {{-- double tick  --}}
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-all" viewBox="0 0 16 16">
+                            <path d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0l7-7zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0z"/>
+                            <path d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708z"/>
+                          </svg>
+                    </span>
+                    @else
+
+                            {{-- single tick  --}}
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                                    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+                                </svg>
+                            </span>
+                            
+                    @endif
+                    @endif
+              
+
+           
+
+                     <p class="grow truncate text-sm font-[100]">
+                       {{$conversation->messages?->last()?->body??' '}}
+                    </p>
+
+                     {{-- unread count --}}
+                     @if ($conversation->unreadMessagesCount()>0)
+                     <span class="font-bold p-px px-2 text-xs shrink-0 rounded-full bg-blue-500 text-white">
+                        {{$conversation->unreadMessagesCount()}}
+                     </span>
+                         
+                     @endif
 
 
-                    <p class="grow truncate text-sm font-[100]">
-                        {{$conversation->messages->last()?->body ?: 'Type to start chat'}}
-                     </p>
-
-                  </div>
+                </div>
 
               </a>
 
