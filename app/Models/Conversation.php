@@ -55,4 +55,8 @@ class Conversation extends Model
                                 ->whereNull('read_at')->count();
 
     }
+    
+    public  function notifications(){
+        return $notifications= Message::whereNull('notification_status')->get();  
+    }
 }

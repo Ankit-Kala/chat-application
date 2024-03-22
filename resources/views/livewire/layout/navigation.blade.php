@@ -10,10 +10,13 @@ new class extends Component
      */
     public function logout(Logout $logout): void
     {
+        Auth::user()->is_active = false;
+        Auth::user()->save();
         $logout();
 
         $this->redirect('/', navigate: true);
     }
+
 }; ?>
 
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
@@ -39,9 +42,23 @@ new class extends Component
                     {{ __('Add User') }}
                 </x-nav-link>
             </div> --}}
-            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                <x-nav-link :href="route('chat.index')" :active="request()->routeIs('chat.index')" wire:navigate>
-                    {{ __('Chat') }}
+            <div wire:poll class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                {{-- <button wire:click="notification" type="submit">sub</button> --}}
+                <x-nav-link :href="route('chat.index')" :active="request()->routeIs('chat.index')" wire:navigate >
+                    @php
+                    $notifications = auth()->user()->conversations->flatMap(function ($conversation) {
+                        return $conversation->notifications();
+                    });             
+                    $notificationCount = $notifications->count();
+                    $hasNotifications = $notifications->where('receiver_id', auth()->id())->isNotEmpty();
+                    // dd($hasNotifications);
+                @endphp
+                
+                @if ($notificationCount > 0 && $hasNotifications)
+                    <span class="blink">&#9679;</span>
+                @endif
+                
+                {{ __('Chat') }}
                 </x-nav-link>
             </div>
             @if (auth()->user()->user_type === 'admin')

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('receiver_id');
             $table->foreign('receiver_id')->references('id')->on('users');
             $table->timestamp('read_at')->nullable();
+            $table->timestamp('notification_status')->nullable();
             $table->text('body')->nullable();
             //deletad actions
             $table->timestamp('receiver_deleted_at')->nullable();

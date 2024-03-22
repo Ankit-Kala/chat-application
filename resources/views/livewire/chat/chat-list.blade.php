@@ -45,9 +45,16 @@
         <li
               id="conversation-{{$conversation->id}}" wire:key="{{$conversation->id}}"
              class="py-3 hover:bg-gray-50 rounded-2xl dark:hover:bg-gray-700/70 transition-colors duration-150 flex gap-4 relative w-full cursor-pointer px-2 {{$conversation->id==$selectedConversation?->id ? 'bg-gray-100/70':''}}">
-        <a href="#" class="shrink-0">
-            <x-avatar src="https://source.unsplash.com/500x500?face-{{$key}}"  />
-          </a>
+             <a href="#" class="flex items-center space-x-2">
+                @if ($conversation->getReceiver()->is_active)
+                <span class="h-3 w-3 bg-green-500 rounded-full"></span> 
+                @else
+                <span class="h-3 w-3 bg-red-500 rounded-full"></span> <!-- Live dot -->
+                @endif
+                <x-avatar src="https://source.unsplash.com/500x500?face-{{$key}}" class="shrink-0 h-12 w-12 rounded-full" /> <!-- Avatar -->
+            </a>
+            
+            
 
           <aside class="grid grid-cols-12 w-full">
 
@@ -75,8 +82,8 @@
                               {{-- double tick  --}}
                     <span>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-all" viewBox="0 0 16 16">
-                            <path d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0l7-7zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0z"/>
-                            <path d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708z"/>
+                            <path fill="red" d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0l7-7zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0z"/>
+                            <path fill="red" d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708z"/>
                           </svg>
                     </span>
                     @else
@@ -90,12 +97,10 @@
                             
                     @endif
                     @endif
-              
-
-           
 
                      <p class="grow truncate text-sm font-[100]">
-                       {{$conversation->messages?->last()?->body??' '}}
+                        {{-- {{ strip_tags($conversation->messages?->last()?->body??' ') }}  --}}
+                       {!! $conversation->messages?->last()?->body??' ' !!}
                     </p>
 
                      {{-- unread count --}}

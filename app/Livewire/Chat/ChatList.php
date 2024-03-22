@@ -3,12 +3,14 @@
 namespace App\Livewire\Chat;
 
 use App\Models\User;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class ChatList extends Component
 {
     public $selectedConversation;
     
+    #[On('echo:chat,MessageSent')]
     public function render()
     {
 

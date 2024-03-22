@@ -5,6 +5,7 @@ namespace App\Livewire\Chat;
 use App\Models\Conversation;
 use App\Models\Message;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class Chat extends Component
@@ -12,6 +13,9 @@ class Chat extends Component
     public $query;
     public $selectedConversation;
 
+
+
+    #[On('echo:chat,MessageSent')]
     public function mount()
     {
 
@@ -22,7 +26,6 @@ class Chat extends Component
                 ->where('receiver_id',auth()->id())
                 ->whereNull('read_at')
                 ->update(['read_at'=>now()]);
-
 
     }
 

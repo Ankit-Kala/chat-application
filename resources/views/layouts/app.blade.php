@@ -15,9 +15,26 @@
         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
         <script src="https://cdn.tailwindcss.com"></script>
 
+        <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
+        <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
+        <style>
+
+        .blink {
+            animation: blinker 1.5s linear infinite;
+            color: red;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        @keyframes blinker {
+            50% {
+                opacity: 0;
+            }
+        }
+        </style>
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
@@ -34,12 +51,12 @@
 
             <!-- Page Content -->
             <main>
+                
                 {{ $slot }}
             </main>
         </div>
          @livewireScripts
          @stack('scripts')
-         
     </body>
 </html>
 
