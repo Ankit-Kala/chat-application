@@ -13,38 +13,58 @@ class Panel extends Component
     public $users;
     public $searchQuery;
     public $searchResults;
+    public $showSearch = false;
 
     public function render()
     {
         $user = auth()->user();
-        return view('livewire.chat.panel',[
-            'conversations'=>$user->conversations()->latest('updated_at')->get(),
+        $conversations = $user->conversations()->latest('updated_at')->get();
+
+        // Retrieve users based on the search query or all users if no search query
+        $this->users = $this->searchQuery
+            ? $this->searchResults
+            : User::where('id', '!=', auth()->id())->get();
+
+        return view('livewire.chat.panel', [
+            'conversations' => $conversations,
         ]);
     }
 
     public function message($userId)
     {
         $authenticatedUserId = auth()->id();
-     
-        # Create new conversation
+        # Check if conversation already exists
+        $existingConversation = Conversation::where(function ($query) use ($authenticatedUserId, $userId) {
+                    $query->where('sender_id', $authenticatedUserId)
+                        ->where('receiver_id', $userId);
+                    })
+                ->orWhere(function ($query) use ($authenticatedUserId, $userId) {
+                    $query->where('sender_id', $userId)
+                        ->where('receiver_id', $authenticatedUserId);
+                })->first();
+        
+      if ($existingConversation) {
+            $existingConversation->touch();
+            // Close the search section
+            $this->showSearch = false;
+            return;
+       }
+        // Create new conversation
         $createdConversation = Conversation::create([
             'sender_id' => $authenticatedUserId,
             'receiver_id' => $userId,
         ]);
+
+         // Close the search section
+         $this->showSearch = false;
     }
 
     public function updatedSearchQuery()
     {
         $user = auth()->user();
-        $conversations = $user->conversations()->latest('updated_at')->get();
 
-        $senderIds = $conversations->pluck('sender_id')->toArray();
-        $receiverIds = $conversations->pluck('receiver_id')->toArray();
-        $conversationUsers = array_merge($senderIds, $receiverIds);
-
+        // Search users based on the search query
         $this->searchResults = User::where('name', 'like', '%'.$this->searchQuery.'%')
-        ->whereNotIn('id', $conversationUsers)
-        ->where('id', '!=', $user->id)
-        ->get();
+                               ->where('id', '!=', auth()->id())->get();
     }
 }

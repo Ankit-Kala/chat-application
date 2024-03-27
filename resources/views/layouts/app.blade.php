@@ -34,6 +34,17 @@
                 opacity: 0;
             }
         }
+
+        @keyframes blink {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        #typingIndicator {
+            animation: blink 1s infinite;
+        }
+
         </style>
     </head>
     <body class="font-sans antialiased">

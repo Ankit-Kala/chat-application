@@ -3,11 +3,11 @@
     @if (!$selectedConversation)
     <div class="relative w-full md:w-[320px] xl:w-[400px] overflow-y-auto shrink-0 h-full border" >
 
-        <livewire:chat.panel>
+        <livewire:chat.panel key="{{ now() }}">
     </div>
     @else
     <div class="relative w-full md:w-[320px] xl:w-[400px] overflow-y-auto shrink-0 h-full border" > 
-        <livewire:chat.panel :selectedConversation="$selectedConversation">
+        <livewire:chat.panel key="{{ now() }}" :selectedConversation="$selectedConversation">
     </div>
     @endif
 

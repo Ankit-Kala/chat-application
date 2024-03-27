@@ -1,35 +1,44 @@
 <div
   class="flex flex-col transition-all h-full overflow-hidden">
 
-    <header class="px-3 z-10 bg-white sticky top-0 w-full py-2">
-
-        <div class="border-b justify-between flex items-center pb-2">
-
-            <div class="flex items-center gap-2">
-                 <h5 class="font-extrabold text-2xl">Chats</h5>
-            </div>
-            <input wire:model.live="searchQuery" type="text" placeholder="Search users..." class="border border-gray-300 rounded px-3 py-1">
+  <header class="px-3 z-10 bg-white sticky top-0 w-full py-2">
+    <div class="border-b justify-between flex items-center pb-2">
+        <div class="flex items-center gap-2">
+            <h5 class="font-extrabold text-2xl">Chats</h5>
+            <button wire:click="$toggle('showSearch')" class="ml-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 2a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2h-6v6a1 1 0 1 1-2 0v-6H4a1 1 0 1 1 0-2h6V3a1 1 0 0 1 1-1z" clip-rule="evenodd" />
+                </svg>
+            </button>
         </div>
-      
-    </header>
-    @if($searchQuery)
-    <div class="mt-4">
+    </div>
+  
+    @if($showSearch)
+        <input type="text" wire:model.live="searchQuery" placeholder="Search users" class="border border-gray-300 px-3 py-2 rounded-md mt-2 w-full">
+    @endif
+</header>
+
+@if($showSearch)
+    <div class="overflow-y-scroll overflow-hidden grow  h-full relative">
         <ul>
-            @foreach($searchResults as $result)
-            <li class="flex items-center space-x-2 py-2">
-                <x-avatar src="https://source.unsplash.com/500x500?face-{{$result->id}}" class="shrink-0 h-12 w-12 rounded-full" />
-                <span class="flex-grow">{{ $result->name }}</span>
-                <button wire:click="message({{ $result->id }})" class="text-blue-500 ml-auto mr-96">Message</button>
-            </li>
-            <li class="border-b border-gray-200"></li>
-            @endforeach
+            @forelse($users as $user)
+                <li class="flex items-center space-x-2 py-2">
+                    <x-avatar src="https://source.unsplash.com/500x500?face-{{$user->id}}" class="shrink-0 h-12 w-12 rounded-full" />
+                    <span class="flex-grow">{{ $user->name }}</span>
+                    <button wire:click="message({{ $user->id }})" class="text-blue-500 ml-auto">Message</button>
+                </li>
+                <li class="border-b border-gray-200"></li>
+            @empty
+                <li>No users found.</li>
+            @endforelse
         </ul>
     </div>
-    @endif
+@endif
 
 
 
 
+@if(!$showSearch)
     <main class=" overflow-y-scroll overflow-hidden grow  h-full relative " style="contain:content">
 
         {{-- chatlist  --}}
@@ -71,7 +80,7 @@
                   {{-- Message body --}}
 
 
-                <div class="flex gap-x-2 items-center">
+                <div  class="flex gap-x-2 items-center">
 
                     @if ($conversation->messages?->last()?->sender_id==auth()->id())
 
@@ -129,4 +138,5 @@
 
      </ul>
     </main>
+    @endif
 </div>
