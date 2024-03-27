@@ -42,11 +42,13 @@ class Panel extends Component
                     $query->where('sender_id', $userId)
                         ->where('receiver_id', $authenticatedUserId);
                 })->first();
-        
+        // dd($existingConversation->id);
       if ($existingConversation) {
+           
             $existingConversation->touch();
             // Close the search section
             $this->showSearch = false;
+            $this->dispatch('check', id: $existingConversation->id)->to(\App\Livewire\Chat\Index::class);
             return;
        }
         // Create new conversation
@@ -57,6 +59,7 @@ class Panel extends Component
 
          // Close the search section
          $this->showSearch = false;
+         $this->dispatch('check', id: $createdConversation->id)->to(\App\Livewire\Chat\Index::class);
     }
 
     public function updatedSearchQuery()
