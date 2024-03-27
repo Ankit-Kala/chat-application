@@ -42,8 +42,7 @@ new class extends Component
                     {{ __('Add User') }}
                 </x-nav-link>
             </div> --}}
-            <div wire:poll class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                {{-- <button wire:click="notification" type="submit">sub</button> --}}
+            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                 <x-nav-link :href="route('chat.index')" :active="request()->routeIs('chat.index')" wire:navigate >
                     @php
                     $notifications = auth()->user()->conversations->flatMap(function ($conversation) {
@@ -62,19 +61,13 @@ new class extends Component
                 </x-nav-link>
             </div>
             @if (auth()->user()->user_type === 'admin')
-            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                <x-nav-link :href="route('users')" :active="request()->routeIs('users')" wire:navigate>
-                    {{ __('Users') }}
-                </x-nav-link>
-            </div>
-            @elseif (auth()->user()->user_type === 'user')
-            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                <x-nav-link :href="route('users')" :active="request()->routeIs('users')" wire:navigate>
-                    {{ __('Connections') }}
-                </x-nav-link>
-            </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('users')" :active="request()->routeIs('users')" wire:navigate>
+                        {{ __('Users') }}
+                    </x-nav-link>
+                </div>
             @endif
-            </div>
+            </div> 
 
 
             <!-- Settings Dropdown -->

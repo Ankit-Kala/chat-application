@@ -16,6 +16,7 @@ class UserCrud extends Component
     public $name, $email, $user_type, $password;
     public $isEdited = false;
 
+    
     public function mount()
     {
         $this->users = User::where('id', '!=', auth()->id())->get();
@@ -81,32 +82,33 @@ class UserCrud extends Component
         return view('livewire.user-crud');
     }
 
-    public function message($userId)
-    {
+    // public function message($userId)
+    // {
 
-      $authenticatedUserId = auth()->id();
-      # Check if conversation already exists
-      $existingConversation = Conversation::where(function ($query) use ($authenticatedUserId, $userId) {
-                $query->where('sender_id', $authenticatedUserId)
-                    ->where('receiver_id', $userId);
-                })
-            ->orWhere(function ($query) use ($authenticatedUserId, $userId) {
-                $query->where('sender_id', $userId)
-                    ->where('receiver_id', $authenticatedUserId);
-            })->first();
+    //   $authenticatedUserId = auth()->id();
+    //   # Check if conversation already exists
+    //   $existingConversation = Conversation::where(function ($query) use ($authenticatedUserId, $userId) {
+    //             $query->where('sender_id', $authenticatedUserId)
+    //                 ->where('receiver_id', $userId);
+    //             })
+    //         ->orWhere(function ($query) use ($authenticatedUserId, $userId) {
+    //             $query->where('sender_id', $userId)
+    //                 ->where('receiver_id', $authenticatedUserId);
+    //         })->first();
         
-      if ($existingConversation) {
-          # Conversation already exists, redirect to existing conversation
-          return redirect()->route('chat', ['query' => $existingConversation->id]);
-      }
+    //   if ($existingConversation) {
+    //     // dd($existingConversation);
+    //       # Conversation already exists, redirect to existing conversation
+    //       return redirect()->route('chat', ['query' => $existingConversation->id]);
+    //   }
   
-      # Create new conversation
-      $createdConversation = Conversation::create([
-          'sender_id' => $authenticatedUserId,
-          'receiver_id' => $userId,
-      ]);
+    //   # Create new conversation
+    //   $createdConversation = Conversation::create([
+    //       'sender_id' => $authenticatedUserId,
+    //       'receiver_id' => $userId,
+    //   ]);
  
-        return redirect()->route('chat', ['query' => $createdConversation->id]);
+    //     return redirect()->route('chat', ['query' => $createdConversation->id]);
         
-    }
+    // }
 }

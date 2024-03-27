@@ -2,23 +2,24 @@
 
 namespace App\Livewire\Chat;
 
-use App\Models\Message;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class Index extends Component
 {
+    public $query;
+    public $selectedConversation;
+
+    #[On('check')]
+    public function test($id)
+    { 
+        $this->selectedConversation=$id;
+    }
+
     #[Layout('layouts.app')]
     public function render()
     {
         return view('livewire.chat.index');
-    }
-
-    public function mount()
-    {
-        // dd('wdwd');
-       #mark message belogning to receiver as read 
-       Message::whereNull('notification_status')
-                ->update(['notification_status'=>now()]);
     }
 }
