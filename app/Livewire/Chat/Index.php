@@ -13,6 +13,13 @@ class Index extends Component
     public $selectedConversation;
 
 
+    public function mount()
+    {
+       #mark message belogning to receiver as read 
+       Message::whereNull('notification_status')
+                ->update(['notification_status'=>now()]);
+    }
+    
     #[On('check')]
     public function test($id)
     { 

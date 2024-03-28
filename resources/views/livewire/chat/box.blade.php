@@ -192,20 +192,18 @@
 
 
     {{-- send message  --}}
-
+    <div id="typingIndicator" style="display: none;">{{ Auth::user()->name }} is typing...</div>
     <footer class="shrink-0 z-10 bg-white inset-x-0">
-        <div id="typingIndicator" style="display: none;">typing...</div>
-        <div class=" p-2 border-t" x-data="{
+        <div class="p-2 border-t" x-data="{
             sendFunction: function() {
-                const trixEditor = document.getElementById('x')
-                $wire.set('body', trixEditor.value)
-                $wire.sendMessage(true);
-
+                const trixEditor = document.getElementById('x');
+                const body = trixEditor.value;
+                Livewire.emit('messageSent', body);
+                Livewire.emit('sendMessage', true);
             }
-        }">
-          
+        }">        
                 <input id="x" type="hidden" name="content">
-                <trix-editor  wire:model="body" input="x"></trix-editor>
+                <trix-editor id="typing" wire:model="body" data-user="{{ Auth::user()->name }}" input="x"></trix-editor>
                 <button class="col-span-2" type="button" @click="sendFunction()">Send</button>
             
             @error('body')
@@ -221,22 +219,67 @@
 </div>
 @script
 <script>
-   document.addEventListener('trix-change', function(event) {
-    var typingIndicator = document.getElementById('typingIndicator');
-    var trixEditorValue = event.target.value.trim(); // Trim to handle spaces
-    if (trixEditorValue.length > 0) {
-        typingIndicator.style.display = 'inline-block';
-    } else {
-        typingIndicator.style.display = 'none';
-    }
-});
+    console.log('awdawdawd');
+    var typingTimeout; // Define typingTimeout variable
+    
+    Echo.channel('chat')
+    .listen('MessageSent', (e) => {
+        console.log(e.message);
+    });
 
+    document.getElementById("typing").addEventListener("keypress", function() {
+        console.log('awdawd');
+        var user = this.getAttribute('data-user'); // Get the user's name from data attribute
+        Echo.private('typing')
+            .whisper('typing', {
+                user: user,
+                typing: true
+            }, 300);
+    });
+
+    Echo.private('typing')
+            .listenForWhisper('typing', function(e) {
+                console.log(e.user + ' is typing');
+                // Show typing indicator when a whisper is received
+                showTypingIndicator(e.user);
+    
+                // Clear the existing timeout and set a new one to hide the typing indicator
+                clearTimeout(typingTimeout);
+                typingTimeout = setTimeout(hideTypingIndicator, 2000); // Adjust the delay as needed
+            });
+    
+ 
+ 
+ 
+ 
+ 
+            // Event listener for when the user stops typing
+    document.getElementById("typing").addEventListener("keyup", function() {
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(hideTypingIndicator, 2000); // Adjust the delay as needed
+        });
+    
+    // Function to show typing indicator
+    function showTypingIndicator(user) {
+        document.getElementById('typingIndicator').style.display = 'block';
+        document.getElementById('typingIndicator').innerText = user + ' is typing...';
+    }
+    
+    // Function to hide typing indicator
+    function hideTypingIndicator() {
+        document.getElementById('typingIndicator').style.display = 'none';
+    }
+</script>
+@endscript
+
+{{-- @script
+<script>
     Echo.channel('chat')
     .listen('MessageSent', (e) => {
         console.log(e.message);
     });
 </script>
-@endscript
+@endscript --}}
 
 </div>
 

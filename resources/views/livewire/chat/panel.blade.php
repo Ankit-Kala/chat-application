@@ -6,9 +6,17 @@
         <div class="flex items-center gap-2">
             <h5 class="font-extrabold text-2xl">Chats</h5>
             <button wire:click="$toggle('showSearch')" class="ml-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 2a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2h-6v6a1 1 0 1 1-2 0v-6H4a1 1 0 1 1 0-2h6V3a1 1 0 0 1 1-1z" clip-rule="evenodd" />
+                @if($showSearch)
+                <!-- Minus Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12H6"></path>
                 </svg>
+            @else
+                <!-- Plus Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+            @endif
             </button>
         </div>
     </div>
@@ -57,7 +65,7 @@
                 @if ($conversation->getReceiver()->is_active)
                 <span class="h-3 w-3 bg-green-500 rounded-full"></span> 
                 @else
-                <span class="h-3 w-3 bg-red-500 rounded-full"></span> <!-- Live dot -->
+                <span class="h-3 w-3 bg-gray-700 rounded-full"></span> <!-- Live dot -->
                 @endif
                 <x-avatar src="https://source.unsplash.com/500x500?face-{{$key}}" class="shrink-0 h-12 w-12 rounded-full" /> <!-- Avatar -->
             </a>
