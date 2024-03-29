@@ -2,9 +2,12 @@
 
 namespace App\Livewire\Chat;
 
+use App\Mail\InvitationMail;
 use App\Models\Conversation;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class Panel extends Component
@@ -14,6 +17,28 @@ class Panel extends Component
     public $searchQuery;
     public $searchResults;
     public $showSearch = false;
+    public $showInviteForm = false;
+
+    #[Validate('required|email')]
+    public $inviteEmail;
+
+    public function invite()
+    {
+        $this->showInviteForm = true;
+    }
+    
+    public function sendInvitation()
+    {
+        $this->validate(); 
+        $inviteEmail = $this->inviteEmail;
+        $invitationLink = 'http://0.0.0.0/register';
+        $inviterName = auth()->user()->name;
+
+        Mail::to($inviteEmail)->send(new InvitationMail($invitationLink, $inviterName));
+        $this->dispatch('invitation-sent', message: 'Invitation sent successfully!');
+        $this->showInviteForm = false;
+        $this->inviteEmail = ''; 
+    }
 
     public function render()
     {

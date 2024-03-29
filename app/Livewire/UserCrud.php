@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 
 class UserCrud extends Component
 {
@@ -16,6 +17,11 @@ class UserCrud extends Component
     public $name, $email, $user_type, $password;
     public $isEdited = false;
 
+    #[On('check')]
+    public function test(){
+        $this->showModal = false;
+        $this->isEdited = false;
+    }
     
     public function mount()
     {
@@ -44,6 +50,7 @@ class UserCrud extends Component
 
         $this->reset(['name', 'email', 'user_type', 'password', 'userIdBeingEdited', 'showModal']);
         $this->users = User::where('id', '!=', auth()->id())->get();
+        
     }
 
 

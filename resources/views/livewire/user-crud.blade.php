@@ -9,7 +9,7 @@
             <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all max-w-lg w-full p-6">
                 <div class="flex justify-between items-center">
                     <h2 class="text-xl font-semibold">User Form</h2>
-                    <button class="text-gray-400 hover:text-gray-600" wire:click="$set('showModal', false)">&times;</button>
+                    <button class="text-gray-400 hover:text-gray-600" wire:click="$dispatch('check')">&times;</button>
                 </div>
                 <form class="mt-4" wire:submit.prevent="createOrUpdateUser">
                     <div class="mb-4">

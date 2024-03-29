@@ -22,12 +22,12 @@
     </div>
   
     @if($showSearch)
-        <input type="text" wire:model.live="searchQuery" placeholder="Search users" class="border border-gray-300 px-3 py-2 rounded-md mt-2 w-full">
+        <input type="text" wire:model.live="searchQuery" placeholder="Search users" class="border border-gray-300 px-3 py-2 rounded-md mt-2 w-full"> 
     @endif
 </header>
 
 @if($showSearch)
-    <div class="overflow-y-scroll overflow-hidden grow  h-full relative">
+    <div class="overflow-y-scroll overflow-hidden grow h-full relative">
         <ul>
             @forelse($users as $user)
                 <li class="flex items-center space-x-2 py-2">
@@ -37,17 +37,91 @@
                 </li>
                 <li class="border-b border-gray-200"></li>
             @empty
-                <li>No users found.</li>
+                <li class="text-center mt-4">No users found.</li>
+                <div class="flex justify-center mt-4">
+                    <x-primary-button type="button" class="!py-2 button-info w-auto mt-2 flex items-center" x-data="" x-on:click.prevent="$dispatch('open-modal', 'inviteUser');">
+                        {{ __('Invite User') }}
+                    </x-primary-button>
+                    {{-- <button wire:click="invite" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Invite User</button> --}}
+                </div>               
             @endforelse
+            {{-- @if($showInviteForm)
+                <div class="bg-white rounded-lg shadow-md p-6 relative">
+                    <button wire:click="$set('showInviteForm', false)" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                    <h2 class="text-lg font-bold mb-4">Invite User</h2>
+                    <div class="mb-4">
+                        <label for="inviteEmail" class="block text-sm font-medium text-gray-700">Email Address</label>
+                        <input id="inviteEmail" type="email" wire:model.defer="inviteEmail" placeholder="Enter user's email" class="border border-gray-300 px-3 py-2 rounded-md w-full focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                        @error('inviteEmail') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                    </div>
+                    <div class="flex justify-end">
+                        <button wire:click="sendInvitation" wire:loading.attr="disabled" wire:loading.class="opacity-50 cursor-not-allowed" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Send Invitation</button>
+                    </div>                    
+                </div>
+            @endif --}}
+
+            <!-- Existing code -->
+
+<!-- Existing code -->
+            {{-- @if($showInviteForm)
+                <div class="fixed inset-0 overflow-y-auto">
+                    <div class="flex items-center justify-center min-h-screen">
+                        <div class="fixed inset-0 bg-gray-500 opacity-75"></div>
+
+                        <!-- Invite Modal -->
+                        <div class="bg-white rounded-lg p-8 w-96 shadow-xl relative">
+                            <button wire:click="$set('showInviteForm', false)" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" wire:loading.attr="disabled">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                            <h2 class="text-lg font-bold mb-4">Invite User</h2>
+                            <x-text-input wire:model="inviteEmail" id="invite" name="invite" type="text" class="internal-icon-input px-3 py-2 rounded-md w-full mb-4" autocomplete="invite" placeholder="Enter user's email" />
+                            <input type="email" wire:model.defer="inviteEmail" placeholder="Enter user's email"
+                                class="border border-gray-300 px-3 py-2 rounded-md w-full mb-4">
+                            <div class="flex justify-end">
+                                <button wire:click="sendInvitation" wire:loading.attr="disabled" wire:loading.class="opacity-50 cursor-not-allowed" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                    <span wire:loading wire:target="sendInvitation">Invitation Sending...</span>
+                                    <span wire:loading.remove>Send Invitation</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif --}}
+        
         </ul>
     </div>
 @endif
 
-
-
+<x-modal name="inviteUser" focusable key="edit_{{ strtotime(now()) }}">
+    <div class="flex justify-between items-center border-b pb-4">
+        <h6 class="text-dark font-semibold text-lg">
+            Invite User
+        </h6>
+        <div class="cursor-pointer" x-on:click.prevent="$dispatch('close');">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 hover:text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </div>
+    </div>
+    <div class="p-4">
+        <x-text-input wire:model="inviteEmail" id="invite" name="invite" type="text" class="internal-input px-3 py-2 rounded-md w-full mb-4" autocomplete="invite" placeholder="Enter user's email" />
+        <div class="flex justify-end">
+            <x-primary-button wire:click="sendInvitation" wire:loading.attr="disabled" wire:loading.class="opacity-50 cursor-not-allowed" class="button-info py-2 px-4">
+                <span wire:loading wire:target="sendInvitation">Invitation Sending...</span>
+                <span wire:loading.remove>Send Invitation</span>
+            </x-primary-button>  
+        </div>
+    </div>
+</x-modal>    
 
 @if(!$showSearch)
-    <main class=" overflow-y-scroll overflow-hidden grow  h-full relative " style="contain:content">
+    <main wire:poll class=" overflow-y-scroll overflow-hidden grow  h-full relative " style="contain:content">
 
         {{-- chatlist  --}}
      <ul class="p-2 grid w-full spacey-y-2">
@@ -148,3 +222,26 @@
     </main>
     @endif
 </div>
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   <script>
+        Livewire.on('invitation-sent', function (data) {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                }
+            });
+
+            Toast.fire({
+                icon: 'success',
+                title: data.message
+            });
+        });
+</script>
+@endpush

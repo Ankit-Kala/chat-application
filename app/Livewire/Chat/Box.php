@@ -28,10 +28,10 @@ class Box extends Component
         $this->showModal = false;
     }
 
-    public function sendMessage($isPoll = false)
+    public function sendMessage()
     {
-        $this->validate(['body' => 'required|string']);
-    
+        dd(request()->all());
+        $this->validate(['body' => 'required|string']);   
         // Retrieve the conversation object using its ID
         $conversation = Conversation::find($this->selectedConversation);
     
@@ -44,7 +44,6 @@ class Box extends Component
         ]);
         $this->reset('body');
         MessageSent::dispatch($createdMessage);
-        $this->isPoll = $isPoll;
     }
     
     #[On('echo:chat,MessageSent')]
