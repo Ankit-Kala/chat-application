@@ -17,15 +17,11 @@ class Panel extends Component
     public $searchQuery;
     public $searchResults;
     public $showSearch = false;
-    public $showInviteForm = false;
+    public $showModal = true;
 
     #[Validate('required|email')]
     public $inviteEmail;
 
-    public function invite()
-    {
-        $this->showInviteForm = true;
-    }
     
     public function sendInvitation()
     {
@@ -36,8 +32,10 @@ class Panel extends Component
 
         Mail::to($inviteEmail)->send(new InvitationMail($invitationLink, $inviterName));
         $this->dispatch('invitation-sent', message: 'Invitation sent successfully!');
-        $this->showInviteForm = false;
-        $this->inviteEmail = ''; 
+        $this->inviteEmail = '';
+        $this->showModal = false;
+        $this->dispatch('closeModal');
+        $this->resetFields();
     }
 
     public function render()
@@ -67,7 +65,6 @@ class Panel extends Component
                     $query->where('sender_id', $userId)
                         ->where('receiver_id', $authenticatedUserId);
                 })->first();
-        // dd($existingConversation->id);
       if ($existingConversation) {
            
             $existingConversation->touch();
@@ -94,5 +91,10 @@ class Panel extends Component
         // Search users based on the search query
         $this->searchResults = User::where('name', 'like', '%'.$this->searchQuery.'%')
                                ->where('id', '!=', auth()->id())->get();
+    }
+
+    public function resetFields()
+    {
+        $this->reset();
     }
 }

@@ -44,56 +44,7 @@
                     </x-primary-button>
                     {{-- <button wire:click="invite" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Invite User</button> --}}
                 </div>               
-            @endforelse
-            {{-- @if($showInviteForm)
-                <div class="bg-white rounded-lg shadow-md p-6 relative">
-                    <button wire:click="$set('showInviteForm', false)" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                    <h2 class="text-lg font-bold mb-4">Invite User</h2>
-                    <div class="mb-4">
-                        <label for="inviteEmail" class="block text-sm font-medium text-gray-700">Email Address</label>
-                        <input id="inviteEmail" type="email" wire:model.defer="inviteEmail" placeholder="Enter user's email" class="border border-gray-300 px-3 py-2 rounded-md w-full focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
-                        @error('inviteEmail') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                    </div>
-                    <div class="flex justify-end">
-                        <button wire:click="sendInvitation" wire:loading.attr="disabled" wire:loading.class="opacity-50 cursor-not-allowed" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Send Invitation</button>
-                    </div>                    
-                </div>
-            @endif --}}
-
-            <!-- Existing code -->
-
-<!-- Existing code -->
-            {{-- @if($showInviteForm)
-                <div class="fixed inset-0 overflow-y-auto">
-                    <div class="flex items-center justify-center min-h-screen">
-                        <div class="fixed inset-0 bg-gray-500 opacity-75"></div>
-
-                        <!-- Invite Modal -->
-                        <div class="bg-white rounded-lg p-8 w-96 shadow-xl relative">
-                            <button wire:click="$set('showInviteForm', false)" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" wire:loading.attr="disabled">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                            <h2 class="text-lg font-bold mb-4">Invite User</h2>
-                            <x-text-input wire:model="inviteEmail" id="invite" name="invite" type="text" class="internal-icon-input px-3 py-2 rounded-md w-full mb-4" autocomplete="invite" placeholder="Enter user's email" />
-                            <input type="email" wire:model.defer="inviteEmail" placeholder="Enter user's email"
-                                class="border border-gray-300 px-3 py-2 rounded-md w-full mb-4">
-                            <div class="flex justify-end">
-                                <button wire:click="sendInvitation" wire:loading.attr="disabled" wire:loading.class="opacity-50 cursor-not-allowed" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                    <span wire:loading wire:target="sendInvitation">Invitation Sending...</span>
-                                    <span wire:loading.remove>Send Invitation</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @endif --}}
-        
+            @endforelse      
         </ul>
     </div>
 @endif
@@ -111,6 +62,7 @@
     </div>
     <div class="p-4">
         <x-text-input wire:model="inviteEmail" id="invite" name="invite" type="text" class="internal-input px-3 py-2 rounded-md w-full mb-4" autocomplete="invite" placeholder="Enter user's email" />
+        @error('inviteEmail') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
         <div class="flex justify-end">
             <x-primary-button wire:click="sendInvitation" wire:loading.attr="disabled" wire:loading.class="opacity-50 cursor-not-allowed" class="button-info py-2 px-4">
                 <span wire:loading wire:target="sendInvitation">Invitation Sending...</span>

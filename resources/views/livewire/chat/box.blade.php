@@ -45,6 +45,7 @@
             <h6 class="font-bold truncate"> {{$selected->getReceiver()->email}} </h6>
 
         </div>
+
         @if($showModal)   
         <div class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75">
             <div class="max-w-xl mx-auto bg-white rounded-lg overflow-hidden shadow-lg">
@@ -83,28 +84,7 @@
 
     </header>
 
-    <main 
-     @scroll="
-      scropTop = $el.scrollTop;
-
-      if(scropTop <= 0){
-
-        window.livewire.emit('loadMore');
-
-      }
-     
-     "
-
-     @update-chat-height.window="
-
-         newHeight= $el.scrollHeight;
-
-         oldHeight= height;
-         $el.scrollTop= newHeight- oldHeight;
-
-         height=newHeight;
-     
-     "
+    <main
     id="conversation"  class="flex flex-col gap-3 p-2.5 overflow-y-auto  flex-grow overscroll-contain overflow-x-hidden w-full my-auto">
 
         @if ($loadedMessages)
@@ -197,9 +177,8 @@
         <div class="p-2 border-t" x-data="{
             sendFunction: function() {
                 const trixEditor = document.getElementById('x');
-                const body = trixEditor.value;
-                Livewire.emit('messageSent', body);
-                Livewire.emit('sendMessage', true);
+                $wire.set('body', trixEditor.value);
+                $wire.sendMessage(true);
             }
         }">        
                 <input id="x" type="hidden" name="content">
@@ -270,6 +249,7 @@
         document.getElementById('typingIndicator').style.display = 'none';
     }
 </script>
+
 @endscript
 
 {{-- @script

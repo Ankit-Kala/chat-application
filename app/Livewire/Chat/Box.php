@@ -30,7 +30,6 @@ class Box extends Component
 
     public function sendMessage()
     {
-        dd(request()->all());
         $this->validate(['body' => 'required|string']);   
         // Retrieve the conversation object using its ID
         $conversation = Conversation::find($this->selectedConversation);
