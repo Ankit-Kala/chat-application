@@ -17,6 +17,9 @@
 
         <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
         <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.css" integrity="sha512-2eMmukTZtvwlfQoG8ztapwAH5fXaQBzaMqdljLopRSA0i6YKM8kBAOrSSykxu9NN9HrtD45lIqfONLII2AFL/Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
@@ -39,6 +42,11 @@
             0% { opacity: 0; }
             50% { opacity: 1; }
             100% { opacity: 0; }
+        }
+
+        .active-link {
+            /* Add your styles for the active link, for example, adding a blue border-bottom */
+            border-bottom: 2px solid blue;
         }
 
         #typingIndicator {
@@ -66,6 +74,7 @@
                 {{ $slot }}
             </main>
         </div>
+       
          @livewireScripts
          @stack('scripts')
     </body>
