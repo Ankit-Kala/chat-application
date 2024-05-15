@@ -22,29 +22,38 @@
     <header class="w-full sticky inset-x-0 flex pb-[5px] pt-[5px] top-0 z-10 bg-white border-b " >
 
         <div class="flex w-full items-center px-2 lg:px-4 gap-2 md:gap-5">
-
-            <a class="" href="{{route('chat.index')}}">
-
-
+            <a class="" href="{{ route('chat.index') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75" />
-                  </svg>
-                  
+                </svg>
             </a>
-
-
-            {{-- avatar --}}
-
+        
             <!-- Avatar -->
             <button wire:click="openModal">
                 <div class="shrink-0">
-                    <x-avatar class="h-9 w-9 lg:w-11 lg:h-11" />
+                    @if($selected->getReceiver()->profile_photo_url)
+                    <img src="{{ asset('storage/'.$selected->getReceiver()->profile_photo_url) }}"
+                     alt="Avatar"
+                     class="w-14 h-14 rounded-full">
+                    @else
+                        <x-avatar class="h-9 w-9 lg:w-11 lg:h-11" />
+                    @endif                   
                 </div>
             </button>
         
-            <h6 class="font-bold truncate"> {{$selected->getReceiver()->email}} </h6>
-
+            <h6 class="font-bold">
+                {{ $selected->getReceiver()->email }}<br>
+                <span class="text-sm text-gray-400">
+                        @if($selected->getReceiver()->is_active)
+                            Active now
+                        @else
+                            Last seen {{ $selected->getReceiver()->last_seen_at }}
+                        @endif
+                </span>
+            </h6>
         </div>
+        
+        
 
         @if($showModal)   
         <div class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75">
@@ -52,7 +61,7 @@
                 <div class="bg-cover h-40" style="background-image: url('https://images.unsplash.com/photo-1522093537031-3ee69e6b1746?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a634781c01d2dd529412c2d1e2224ec0&auto=format&fit=crop&w=2098&q=80');"></div>
                 <div class="border-b px-8">
                     <div class="text-center sm:text-left sm:flex mb-1">
-                        <img class="h-32 w-32 rounded-full border-4 border-white -mt-16 mr-4" src="https://randomuser.me/api/portraits/women/21.jpg" alt="">
+                        <img class="h-32 w-32 rounded-full border-4 border-white -mt-16 mr-4" src="{{ asset('storage/'.$selected->getReceiver()->profile_photo_url) }}" alt="">
                         <div class="py-2">
                             <h3 class="font-bold text-2xl mb-1">{{$selected->getReceiver()->name}}</h3>
                             <div class="inline-flex text-gray-600 sm:flex items-center">
@@ -103,20 +112,26 @@
         {{-- avatar --}}
 
         <div @class(['shrink-0'])>
-            <x-avatar />
+            
         </div>
+        
             {{-- messsage body --}}
 
             <div @class(['flex flex-wrap text-[15px]  rounded-xl p-2.5 flex flex-col text-black bg-[#f6f6f8fb]',
                          'rounded-bl-none border  border-gray-200/40 '=>!($message->sender_id=== auth()->id()),
                          'rounded-br-none bg-blue-500/80 text-white'=>$message->sender_id=== auth()->id()
                ])>
-
-
-            
-            <p class="whitespace-normal truncate text-sm md:text-base tracking-wide lg:tracking-normal">
-              {!! $message->body !!}
-            </p>
+           
+           <p class="whitespace-normal truncate text-sm md:text-base tracking-wide lg:tracking-normal">
+            @if(strpos($message->body, '.jpg') !== false || strpos($message->body, '.jpeg') !== false || strpos($message->body, '.png') !== false)
+                <!-- Display image -->
+                <img src="{{ asset('storage/'.str_replace('public/', '', $message->body)) }}" alt="Image" class="max-w-xs max-h-xs">
+            @else
+                <!-- Display message -->
+                {!! $message->body !!}
+            @endif
+        </p>
+        
 
         {{-- @if ($isPoll)
             <div wire:poll.150ms class="ml-auto flex gap-2">
@@ -179,10 +194,11 @@
                 const trixEditor = document.getElementById('x');
                 $wire.set('body', trixEditor.value);
                 $wire.sendMessage(true);
-            }
-        }">        
+            },
+        }">
                 <input id="x" type="hidden" name="content">
-                <trix-editor id="typing" wire:model="body" data-user="{{ Auth::user()->name }}" input="x"></trix-editor>
+                {{-- <trix-editor id="typing" wire:model="body" data-user="{{ Auth::user()->name }}" input="x" @trix-attachment-add="uploadTrixImage($event.attachment)"></trix-editor> --}}
+                <trix-editor id="typing" wire:model="body" data-user="{{ Auth::user()->name }}" input="x" @trix-attachment-add="console.log($event.attachment)"></trix-editor>
                 <button class="col-span-2" type="button" @click="sendFunction()">Send</button>
             
             @error('body')
@@ -198,6 +214,45 @@
 </div>
 @script
 <script>
+
+        addEventListener("trix-attachment-add", function(event) {
+            uploadTrixImage(event.attachment);
+        });
+
+
+        function uploadTrixImage(attachment){
+            // upload with livewire
+            @this.upload(
+                'photos',
+                attachment.file,
+                function (uploadedURL) {
+
+                    // We need to create a custom event.
+                    // This event will create a pause in thread execution until we get the Response URL from the Trix Component @completeUpload
+                    const trixUploadCompletedEvent = `trix-upload-completed:${btoa(uploadedURL)}`;
+                    const trixUploadCompletedListener = function(event) {
+                        attachment.setAttributes(event.detail);
+                        window.removeEventListener(trixUploadCompletedEvent, trixUploadCompletedListener);
+                    }
+
+                    window.addEventListener(trixUploadCompletedEvent, trixUploadCompletedListener);
+
+                    // call the Trix Component @completeUpload below
+                    @this.call('completeUpload', uploadedURL, trixUploadCompletedEvent);
+                },
+                function() {},
+                function(event){
+                    attachment.setUploadProgress(event.detail.progress);
+                },
+            )
+            // complete the upload and get the actual file URL
+        }
+
+
+
+
+
+
     console.log('awdawdawd');
     var typingTimeout; // Define typingTimeout variable
     
@@ -227,11 +282,6 @@
                 typingTimeout = setTimeout(hideTypingIndicator, 2000); // Adjust the delay as needed
             });
     
- 
- 
- 
- 
- 
             // Event listener for when the user stops typing
     document.getElementById("typing").addEventListener("keyup", function() {
             clearTimeout(typingTimeout);
